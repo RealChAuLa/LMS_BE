@@ -17,10 +17,6 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @ApiModelProperty(notes = "Username for login", required = true)
-    private String username;
-
-    @Column(nullable = false, unique = true)
     @ApiModelProperty(notes = "Email address of the user", required = true)
     private String email;
 
@@ -32,13 +28,17 @@ public class User {
     @ApiModelProperty(notes = "Full name of the user")
     private String fullName;
 
+    @Column(name = "role")
+    @ApiModelProperty(notes = "Role of the user in the system")
+    private String role;
+
     @Column(name = "created_at")
     @ApiModelProperty(notes = "Timestamp when user was created")
     private LocalDateTime createdAt;
 
-    @Column(name = "last_login")
-    @ApiModelProperty(notes = "Timestamp of user's last login")
-    private LocalDateTime lastLogin;
+    @Column(name = "last_updated_at")
+    @ApiModelProperty(notes = "Timestamp of user profile last update")
+    private LocalDateTime lastUpdatedAt;
 
     @Column(name = "is_active", nullable = false)
     @ApiModelProperty(notes = "Indicates whether the user account is active")
@@ -49,8 +49,7 @@ public class User {
     }
 
     // Constructor with required fields
-    public User(String username, String email, String password) {
-        this.username = username;
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
         this.createdAt = LocalDateTime.now();
@@ -63,14 +62,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {
@@ -105,12 +96,12 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getLastLogin() {
-        return lastLogin;
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
     }
 
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 
     public boolean isActive() {
@@ -121,8 +112,20 @@ public class User {
         isActive = active;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdatedAt = LocalDateTime.now();
     }
 }
